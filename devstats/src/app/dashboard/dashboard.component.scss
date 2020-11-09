@@ -1,0 +1,69 @@
+
+
+.summary-card-content {
+  font-size: large;
+  height: 345px;
+
+  strong {
+    width: 15rem;
+  }
+
+  .summary-number {
+    font-size: 1.5rem;
+    padding-left: 2rem;
+  }
+}
+
+.summary-card-content2 {
+  font-size: large;
+  height: 300px;
+
+  strong {
+    width: 15rem;
+  }
+
+  .summary-number {
+    font-size: 1.5rem;
+    padding-left: 2rem;
+  }
+}
+
+.graph-card {
+  position: absolute;
+  top: 160px;
+  width: 472px;
+  right: 0px;
+}
+
+.bug-chart-1 {
+  display: block;
+  width: 50%;
+  max-width: 350px;
+  position: absolute;
+  right: 10px;
+  top: -350px;
+  background-color: white;
+}
+
+.bug-chart-2 {
+  display: block;
+  width: 50%;
+  max-width: 350px;
+  position: absolute;
+  right: 370px;
+  top: -350px;
+  background-color: white;
+}
+
+h1 {
+  font-size: 3rem;
+  margin: 2rem;
+}
+
+.truncate-text {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: 400px;
+  display: block;
+}

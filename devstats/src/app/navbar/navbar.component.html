@@ -1,0 +1,30 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #drawer class="sidenav" fixedInViewport
+      [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+      [mode]="(isHandset$ | async) ? 'over' : 'side'"
+      [opened]="(isHandset$ | async) === false">
+    <mat-toolbar>Team</mat-toolbar>
+    <mat-nav-list *ngIf="picker.currentSprint">
+      <a mat-list-item href="#" (click)="picker.pickDev('Sprint Summary')">Sprint Summary</a>
+      <ng-container *ngFor="let dev of devWhiteList">
+        <a mat-list-item href="#" (click)="picker.pickDev(dev)">{{dev}}</a>
+      </ng-container>
+      
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <button
+        type="button"
+        aria-label="Toggle sidenav"
+        mat-icon-button
+        (click)="drawer.toggle()"
+        *ngIf="isHandset$ | async">
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+      <span>Sprints</span>
+      <a *ngFor="let sprint of sprintList" href="#" (click)="picker.pickSprint(sprint)" [class.selected]="sprint === picker.currentSprintName">{{ sprint }}</a>
+    </mat-toolbar>
+    <app-dashboard *ngIf="picker.currentDev"></app-dashboard>
+  </mat-sidenav-content>
+</mat-sidenav-container>

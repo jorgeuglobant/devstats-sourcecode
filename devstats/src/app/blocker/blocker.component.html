@@ -1,0 +1,4 @@
+<form class="blocker" (submit)="accessData()" *ngIf="!picker.decrypted">
+    <input type="password" #passwordE name="password" [(ngModel)]="password" />
+    <button type="submit">Access</button>
+</form>

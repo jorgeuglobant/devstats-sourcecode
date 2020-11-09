@@ -1,0 +1,22 @@
+{
+  "name": "devstats",
+  "version": "1.0.0",
+  "description": "Stats generator for the AO Globant Dev team",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "jorge.urbina@globant.com",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^4.1.0",
+    "crypto-js": "^4.0.0",
+    "csv-parser": "^2.3.3",
+    "json2csv": "^5.0.1",
+    "json2xls": "^0.1.2",
+    "moment": "^2.27.0",
+    "removeduplicates": "^1.1.0",
+    "superagent": "^6.0.0"
+  }
+}

@@ -1,0 +1,288 @@
+<h1 class="mat-h1">{{ picker.currentDevName || 'Dashboard'}}</h1>
+<mat-card class="dashboard-card">
+  <mat-card-header>
+    <mat-card-title>
+      Time-Track Summary
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="summary-card-content">
+    <mat-list role="list">
+      <!--mat-list-item role="listitem"><strong>Total of Stories:</strong> <label
+          class="summary-number">{{picker.currentDev.summary.totalStories}}</label></mat-list-item>
+      <mat-divider></mat-divider-->
+      <mat-list-item role="listitem"><strong>Total of Stories from Dev to PR:</strong> <label
+        class="summary-number">{{picker.currentDev.summary.totalStoriesDevToPr}}</label></mat-list-item>
+    <mat-divider></mat-divider>
+      <mat-list-item role="listitem"><strong>Total of Bugs:</strong> <label
+          class="summary-number">{{picker.currentDev.summary.totalBugs}}</label></mat-list-item>
+      <mat-divider></mat-divider>
+      <mat-list-item role="listitem"><strong>Total of Others:</strong> <label
+        class="summary-number">{{picker.currentDev.summary.totalOthers}}</label></mat-list-item>
+    <mat-divider></mat-divider>
+      <mat-list-item role="listitem"><strong>Total of Hours Tracked:</strong> <label
+          class="summary-number">{{picker.currentDev.summary.totalTimeTrackedH}}</label></mat-list-item>
+    </mat-list>
+  </mat-card-content>
+</mat-card>
+<mat-card class="dashboard-card graph-card">
+  <mat-card-content>
+    <app-summary-line-chart></app-summary-line-chart>
+  </mat-card-content>
+</mat-card>
+<mat-accordion>
+  <mat-expansion-panel *ngIf="picker.currentDev.timeTrackedDS" hideToggle>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Time tracks
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <table mat-table [dataSource]="picker.currentDev.timeTrackedDS" matSort #matSort1 class="mat-elevation-z8">
+
+      <!--- Note that these columns can be defined in any order.
+                  The actual rendered columns are set as a property on the row definition" -->
+
+      <!-- Position Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Id. </th>
+        <td mat-cell *matCellDef="let element"> <a [href]="'https://atriawealth.atlassian.net/browse/' + element.id" target="_blank">{{element.id}}</a> </td>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Summary </th>
+        <td mat-cell *matCellDef="let element">  <span class="truncate-text" title="{{element.description}}"> {{element.description}} </span> </td>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Type </th>
+        <td mat-cell *matCellDef="let element"> {{element.type}} </td>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="parent">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Parent </th>
+        <td mat-cell *matCellDef="let element"> <a [href]="'https://atriawealth.atlassian.net/browse/' + element.parent" target="_blank">{{element.parent}}</a> </td>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="parentType">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Parent Type </th>
+        <td mat-cell *matCellDef="let element"> {{element.parentType}} </td>
+      </ng-container>
+
+      <!-- Symbol Column -->
+      <ng-container matColumnDef="timeH">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Tracked hours </th>
+        <td mat-cell *matCellDef="let element"> {{element.timeH}} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="['id','description','type','parent','parentType','timeH']"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['id','description','type','parent','parentType','timeH']"></tr>
+    </table>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel *ngIf="picker.currentDev.timeTrackedDS" hideToggle>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Bugs Generated
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <table mat-table [dataSource]="picker.currentDev.bugs" matSort #matSort2 class="mat-elevation-z8">
+
+      <!--- Note that these columns can be defined in any order.
+                  The actual rendered columns are set as a property on the row definition" -->
+      <ng-container matColumnDef="parent">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Story </th>
+        <td mat-cell *matCellDef="let element, let i = index"> 
+          <a [href]="'https://atriawealth.atlassian.net/browse/' + element.parent" target="_blank">{{printParent(element.id)}}</a> </td>
+      </ng-container>
+       <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Bug </th>
+        <td mat-cell *matCellDef="let element"> 
+          <a [href]="'https://atriawealth.atlassian.net/browse/' + element.id" target="_blank">{{element.id}}</a> </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="['parent','id']"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['parent','id']"></tr>
+    </table>
+  </mat-expansion-panel>
+  
+  
+  
+</mat-accordion>
+
+
+
+
+
+
+
+
+
+
+
+
+<h1 class="mat-h1">Bugs & Coaching summary</h1>
+<mat-card class="dashboard-card">
+  <mat-card-header>
+    <mat-card-title>
+      Bug Summary
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="summary-card-content2">
+    <mat-list role="list">
+      <mat-list-item role="listitem"><strong>Total of Valid Bugs:</strong> <label
+          class="summary-number">{{picker.currentSprint.bugStats.valid.length}}</label></mat-list-item>
+      <mat-divider></mat-divider>
+      <mat-list-item role="listitem"><strong>Total of Invalid Bugs:</strong> <label
+          class="summary-number">{{picker.currentSprint.bugStats.invalid.length}}</label></mat-list-item>
+      <mat-list-item *ngIf="false" role="listitem"><strong>Total of Uncategorized Bugs:</strong> <label
+        class="summary-number">{{picker.currentSprint.bugStats.uncategorized.length}}</label></mat-list-item>
+    </mat-list>
+  </mat-card-content>
+</mat-card>
+<mat-card class="dashboard-card">
+  <mat-card-content>
+    <app-summary-bug-chart class="bug-chart-1" [valid]="false"></app-summary-bug-chart>
+    <app-summary-bug-chart class="bug-chart-2" [valid]="true"></app-summary-bug-chart>
+  </mat-card-content>
+</mat-card>
+<mat-accordion>
+  <mat-expansion-panel *ngIf="picker.currentSprint.bugStats.valid" hideToggle>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Valid Bugs
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <table mat-table [dataSource]="picker.currentSprint.bugStats.valid" class="mat-elevation-z8">
+
+      <!--- Note that these columns can be defined in any order.
+                  The actual rendered columns are set as a property on the row definition" -->
+
+      <!-- Position Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef> Id. </th>
+        <td mat-cell *matCellDef="let element"> <a [href]="'https://atriawealth.atlassian.net/browse/' + element.id" target="_blank">{{element.id}}</a> </td>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef> Summary </th>
+        <td mat-cell *matCellDef="let element"> <span class="truncate-text" title="{{element.description}}">{{element.description}}</span> </td>
+      </ng-container>
+
+      <ng-container matColumnDef="labels">
+        <th mat-header-cell *matHeaderCellDef> Labels </th>
+        <td mat-cell *matCellDef="let element"> {{element.labels}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="coachingActions">
+        <th mat-header-cell *matHeaderCellDef> Coaching Actions </th>
+        <td mat-cell *matCellDef="let element"> <span class="truncate-text" title="{{element.coachingActions}}"> {{element.coachingActions}} </span> </td>
+      </ng-container>
+
+      <ng-container matColumnDef="coachingDev">
+        <th mat-header-cell *matHeaderCellDef> Coached Dev </th>
+        <td mat-cell *matCellDef="let element"> {{element.coachingDev}} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="['id','description','labels','coachingActions','coachingDev']"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['id','description','labels','coachingActions','coachingDev']"></tr>
+    </table>
+  </mat-expansion-panel>
+  
+  
+  <mat-expansion-panel *ngIf="picker.currentSprint.bugStats.invalid" hideToggle>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Invalid Bugs
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <table mat-table [dataSource]="picker.currentSprint.bugStats.invalid" class="mat-elevation-z8">
+
+      <!--- Note that these columns can be defined in any order.
+                  The actual rendered columns are set as a property on the row definition" -->
+
+      <!-- Position Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef> Id. </th>
+        <td mat-cell *matCellDef="let element"> <a [href]="'https://atriawealth.atlassian.net/browse/' + element.id" target="_blank">{{element.id}}</a> </td>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef> Summary </th>
+        <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="labels">
+        <th mat-header-cell *matHeaderCellDef> Labels </th>
+        <td mat-cell *matCellDef="let element"> {{element.labels}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="coachingActions">
+        <th mat-header-cell *matHeaderCellDef> Coaching Actions </th>
+        <td mat-cell *matCellDef="let element"> {{element.coachingActions}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="coachingDev">
+        <th mat-header-cell *matHeaderCellDef> Coached Dev </th>
+        <td mat-cell *matCellDef="let element"> {{element.coachingDev}} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="['id','description','labels','coachingActions','coachingDev']"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['id','description','labels','coachingActions','coachingDev']"></tr>
+    </table>
+  </mat-expansion-panel>
+
+
+
+  <mat-expansion-panel *ngIf="false && picker.currentSprint.bugStats.uncategorized" hideToggle>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Uncategorized Bugs
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <table mat-table [dataSource]="picker.currentSprint.bugStats.uncategorized" class="mat-elevation-z8">
+
+      <!--- Note that these columns can be defined in any order.
+                  The actual rendered columns are set as a property on the row definition" -->
+
+      <!-- Position Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef> Id. </th>
+        <td mat-cell *matCellDef="let element"> <a [href]="'https://atriawealth.atlassian.net/browse/' + element.id" target="_blank">{{element.id}}</a> </td>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef> Summary </th>
+        <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="labels">
+        <th mat-header-cell *matHeaderCellDef> Labels </th>
+        <td mat-cell *matCellDef="let element"> {{element.labels}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="coachingActions">
+        <th mat-header-cell *matHeaderCellDef> Coaching Actions </th>
+        <td mat-cell *matCellDef="let element"> {{element.coachingActions}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="coachingDev">
+        <th mat-header-cell *matHeaderCellDef> Coached Dev </th>
+        <td mat-cell *matCellDef="let element"> {{element.coachingDev}} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="['id','description','labels','coachingActions','coachingDev']"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['id','description','labels','coachingActions','coachingDev']"></tr>
+    </table>
+  </mat-expansion-panel>
+</mat-accordion>

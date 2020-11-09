@@ -1,0 +1,62 @@
+﻿Link;issue_key;dev;coahing_output
+;NAP-8752;Roberto Roman;when Laserapp dev is not available, mappings need to be tested agains the Form Audit
+;NAP-8747;Jonathan H. Fernández;not to assume all brokers are going to work, SPF was not tested properly during dev
+;NAP-8731;;this was an improvement implemented over feedback from the pilot
+;NAP-8718;Luis Lopez;This happened because we did not test all paths before moving to QA, while we propse a solution from the automation side we are going to  make sure this is done manually
+;NAP-8711;Slava Gruzdov;for BE LaserApp development we need to fill out all the fields in the form a generate a PDF
+;NAP-8688;Team;This was a regression testing issue
+;NAP-8671;Slava Gruzdov;for BE LaserApp development we need to fill out all the fields in the form a generate a PDF
+;NAP-8667;Jonathan H. Fernández;This was a combination of both regression testing fail and environmental issues
+;NAP-8658;;Right now it is very complicated to test this kind of features locally or on QA, that is why we are pushing to have a robust QA environment
+;NAP-8643;Jhonatan Caceres Acevedo;This was a text change missed on the form content, we need to make text searches on the form HTML before moving to QA
+;NAP-8613;Team;Laserapp fields that do not come form the form must be tested on different paths before moving stories to QA
+;NAP-8534;Sergio Torres;for BE LaserApp development we need to fill out all the fields in the form a generate a PDF
+;NAP-8493;;This was an environmental issue, agreed to double check the availability of the US before moving to UAT
+;NAP-8463;Team;for BE LaserApp development we need to fill out all the fields in the form a generate a PDF
+;NAP-6816;Team;for BE LaserApp development we need to fill out all the fields in the form a generate a PDF
+;NAP-8447;Team;We are including document type testing on the development process
+;NAP-8446;;Team did not generate this bug
+;NAP-8442;Team;The root cause of this bug came from merging developments together, until we have a robust automation process we are going to be more alert to code merges
+;NAP-6855;Ivan Zunkevich;for BE LaserApp development we need to fill out all the fields in the form a generate a PDF
+;NAP-8426;Team;prefilled data needs to be considered for all forms, even if the used does not insert anything we must make sure there is no data being stored under the hood
+;NAP-8414;;This came from a misunderstanding of the requirements, this development was done on february and we no longer work with this dev
+;NAP-8397;;This is a border case, very difficult to detect and even to replicate
+;NAP-8337;;This was a platform error on FundVision side
+;NAP-8324;Jonathan H. Fernández;More test cases had to be done before moving this to QA
+;NAP-8322;;The root cause of this issue was a change on the Firelight platform configuration
+;NAP-8297;;This was a platform error on FundVision side
+;NAP-8295;Sergio Torres;We need to make sure that the tamplates are always up to date on UAT, specially after making a new deployment
+;NAP-9221;Jorge Urbina;This bug was detected and fixed early but it was not merged on the codebase on time
+;NAP-9218;Team;We should have designed a test case for the BSDS and CRS that would validate the flow from the forms directory
+;NAP-9216;Team;We did not catch this error because the testing done over the laserapp mapping was to validate that the data was there, but we need to check the validity of the content in the future
+;NAP-9215;Javier Elizalde Solis;This happened because we did not test all paths before moving to QA, while we propse a solution from the automation side we are going to  make sure this is done manually
+;NAP-9214;Team;This had to be checked when requesting Laserapp to update the PDF's. we lacked communication with the LaserApp team
+;NAP-1835;Roberto Roman;This was a text change missed on the form content, we need to make text searches on the form HTML before moving to QA
+;NAP-9151;;This bug was not geenrated by the NAP team
+;NAP-9067;Jonathan H. Fernández;There was a border case not considered during development, where if there is an error before creating the app on firelight, we create the package on our side anyway, need to consider these test cases on the future
+;NAP-9013;Jhonatan Caceres Acevedo;We need to test for every broker dealer, that there is no unclearable errors due to newly included validations
+;NAP-9009;;we are requesting this to become a CR
+;NAP-8995;Jorge Urbina;This bug was detected and fixed early but it was not merged on the codebase on time
+;NAP-8909;Team;was not a detectable bug, but a user experience improvement, we are reviewing how to include these in our development process to avoid circling over these kind of issues
+;NAP-8900;Roberto Roman;This happened because we did not test all paths before moving to QA, while we propse a solution from the automation side we are going to  make sure this is done manually
+;NAP-8817;Team;This was caused by a change on the configuration for FireLight on their platform
+;NAP-8784;Jonathan H. Fernández;We need to keep an eye out to predict these kind of environmental issues, where we need dependencies from other development that may not already be merged, it is important to have the stories properly linked
+;NAP-8779;Luis Lopez;Need to keep an eye out for user experience flaws like this one
+;NAP-9766;Team;Caused by an environmental issue with the user on Synth3, the user were configured by Juan Bielma to not have this issue again
+;NAP-9673;Team;Issue came from fixing a conflict on the PR of the story
+;NAP-9664;;Change Request
+;NAP-9658;Team;Activation error, we are pushing to set up a unified testing environment with real data, to be able to test these cases
+;NAP-9640;Team;This was caused by applying a feature flag on the October 8th release 2020, we need to avoid these scenarios in the future, and in case it in unavoidable, we need to create richer test cases for the flags
+;NAP-9627;Roberto Roman;Schwab was supposed to behave like a direct account, with no automatic integration and it was specified on the story
+;NAP-9622;Murukesh;Not properly tested
+;NAP-9612;Team;This account type was never implemented for pershing even though it is available on the UI, what else is missing? We are going to make a full search
+;NAP-9607;Roberto Roman;The form was removed from the required path, but the story also specified that the form must be included on the optional forms, we need to be more vigilant for these details
+;NAP-9539;;
+;NAP-9531;Roberto Roman;Should have been detected during testing, and even before moving this to QA. It was not detected on local environment because just one of the two test cases was checked.
+;NAP-9495;;Invalid
+;NAP-9380;Jonathan H. Fernández;There were some paths were these options was not added, until we have an automated process to check on this, we need to check every path for this kind of stories before moving to QA
+;NAP-9812;Team;The IRA FS NAF was not tested and it contained an additional validation
+;NAP-9735;Team;Next time we do integrations with third party vendors like this, we need to reach out to the responsible (Murukesh in this case) to test it
+;NAP-9641;;This is an issue wth MyScans, first time the AO team works with this
+;NAP-9633;Slava Gruzdov;This changes were added to the codebase then a few days later they were removed by another commit, Slava to be more careful about this
+;NAP-9631;Slava Gruzdov;This changes were added to the codebase then a few days later they were removed by another commit, Slava to be more careful about this
