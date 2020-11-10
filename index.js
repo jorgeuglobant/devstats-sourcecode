@@ -149,7 +149,7 @@ const getAllIssues = async () => {
 };
 
 
-
+// Un bug es valido si tiena alguno de estos labels
 const checkIfBugIsValid = jiraIssue => {
     const validBugLabels = [
         'RCA-Valid',
@@ -164,6 +164,8 @@ const checkIfBugIsValid = jiraIssue => {
     return jiraIssue.fields.labels.some(label => validBugLabels.includes(label));
 }
 
+
+// El bug es invalido si tiene alguno de estos labels
 const checkIfBugIsInvalid = jiraIssue => {
     const invalidBugLabels = [
         'RCA-Change-Request',
@@ -176,10 +178,13 @@ const checkIfBugIsInvalid = jiraIssue => {
     return jiraIssue.fields.labels.some(label => !checkIfBugIsValid(jiraIssue) && invalidBugLabels.includes(label));
 }
 
+// El bug es other si no es ni valido ni invalido
 const checkIfBugIsOther = jiraIssue => !checkIfBugIsValid(jiraIssue) && !checkIfBugIsInvalid(jiraIssue);
 
+// Obtiene un issue a partir de su key, ej NAP-1323
 getIssueByKey = key => issueMap[key];
 
+// No lo estoy usando en este momento pero aqui en este csv estan los datos de coaching
 const getCoachingData = async () => {
     return new Promise((resolve, reject) => {
         const data = {};
@@ -195,9 +200,13 @@ const getCoachingData = async () => {
     });
 }
 
+// Para un sprint obtiene todas las historias movidas por primera vez a PT
 const getStoriesDoneOnSprint = (sprint, issues) => 
+    // Para todos los issues
     issues
+    // que sean story's
     .filter(jiraIssue => jiraIssue.fields.issuetype.name === 'Story')
+    // que se hayan movido a PR Review por primera vez este sprint
     .filter(jiraIssue => {
         const firstTimeItWasMovedToPR = jiraIssue.changelog.histories
             .sort((a,b) => a.created > b.created? 1 : -1)
@@ -206,29 +215,43 @@ const getStoriesDoneOnSprint = (sprint, issues) =>
     }
 )
 
+// Para un sprint obtiene todos los bugs creados
 const getBugsCreatedOnSprint = (sprint, issues) => 
+    // Para todos los issues
     issues
+    // que sean bugs
     .filter(jiraIssue => jiraIssue.fields.issuetype.name === 'Bug')
+    // que la fecha de creación pertenezca a este sprint
     .filter(jiraIssue => sprint === dateBelongsToSpring(jiraIssue.fields.created));
 
+// Para un sprint obtiene todos los bugs asociados a historias que se movieron a PR durante el sprint
 const getBugsGeneratedOnSprint = (sprint, issues, storiesDone) => {
     if (!storiesDone) {
+        // si no me dieorn las historias movidas a PR las calculo
         storiesDone = getStoriesDoneOnSprint(sprint, issues);
     }
     const linkedIssues = [];
+    // para cada historia movida a PR por primera vez en el sprint
     storiesDone.forEach(story => {
         if (!story.fields.issuelinks) {
+            // Si la historia no tiene links no me importa
             return true;
         }
+        // Los links a esta historia del tipo Relates y Bloocks
         story.fields.issuelinks.filter(link => ['Relates','Blocks']
+        // Asociados a un bug
         .includes(link.type.name) && (link.inwardIssue || link.outwardIssue).fields.issuetype.name === 'Bug')
+        // Los añado a mi resultado, con su key, y la historia asociada
         .forEach( link => linkedIssues.push({
             key: (link.inwardIssue || link.outwardIssue).key,
             story
         }));
     })
+    // Y al final por cada uno de resultados
     return linkedIssues
+                // Solo me interesan los que conocemos (que son de NAP o NAO)
                 .filter(issue => getIssueByKey(issue.key))
+                // con este formato
                 .map(issue => ({
                     ...getIssueByKey(issue.key),
                     story: issue.story,
@@ -298,19 +321,26 @@ const buildBugsGeneratedData = (sprint, issues) => {
     }
 }
 
+// Para los timetracks
 const buildTimeTracks = (sprint, issues) => {
     const timeMap = {};
     const results = [];
+    // Por cada issue del sprint
     issues.forEach(issue => {
+        // reviso sus logs de cambio
         issue.changelog.histories
+        // me interesan los cambios en el timespent si el issues es un bug o story terminado este sprint, o si su padre es un bug o story terminado este sprint, de lo contrario me interesa si su fecha de creación es de este sprint
         .filter(history => history.items.find(item => item.field === 'timespent') 
                                 && (['Story', 'Bug'].includes(issue.fields.issuetype.name)? sprint === whenItWasFirstFinished(issue)
                                     : issue.fields.parent && ['Story', 'Bug'].includes(issue.fields.parent.fields.issuetype.name)? sprint === whenItWasFirstFinished(issueMap[issue.fields.parent.key])
                                     : sprint === dateBelongsToSpring(history.created)))
+        //para cada history
         .forEach(history => {
+            // solo me interesa las de mis developers
             if (!devWhiteList.includes(history.author.displayName)) {
                 return true;
             }
+            // caalculo el tiempo invertido en cada evento y lo voy sumando
             history.items.filter(item => item.field === 'timespent').forEach(item => {
                 const parent = issue.fields.parent && issue.fields.parent.key;
                 const parentType = issue.fields.parent && issue.fields.parent.fields.issuetype.name;
@@ -333,6 +363,7 @@ const buildTimeTracks = (sprint, issues) => {
             })
         })
    });
+   // En este punto tenfo un mapa de ssueKey->dev->time, ahora lo convierto en un formato fácil para mostrarlo en pantalla
    Object.values(timeMap).forEach(timeTrack => {
        Object.keys(timeTrack.devs).forEach(dev => {
            results.push({
@@ -350,10 +381,15 @@ const buildTimeTracks = (sprint, issues) => {
 }
 
 const buildSprintData = (sprint, issues) => ({
+    // Genero el resumen
     summary: buildSummaryData(sprint, issues),
+    // Genero las historias movidas a PR por primera vez
     storiesDone: buildStoriesDone(sprint,issues),
+    // Genero los bugs creados durante
     bugsCreated: buildBugsCreatedData(sprint, issues),
+    // Genero los bugs asociados a las historias movidas a PR por primera vez
     bugsGenerated: buildBugsGeneratedData(sprint, issues),
+    // Genero los timetracks de este sprint
     timeTracks: buildTimeTracks(sprint, issues),
 });
 
@@ -361,17 +397,21 @@ const buildSprintData = (sprint, issues) => ({
 (async () => {
     try {
         coachingData = await getCoachingData();
+        // Para todos los issues que existen en Jira de Account Opening
         const issues = await getAllIssues();
         issues.forEach(issue => {
+            // Esto come memoria pero me ayuda a conseguir un issue por su llave sin tener que iterar por miles de entradas
             issueMap[issue.key] = issue;
         })
         const finalResult = {}
         Object.keys(sprintDates).forEach(sprint => {
+            // Genero la data de cada sprint
             finalResult[sprint] = buildSprintData(sprint, issues)
         })
+        // Encripto la data
         const encrypted = CryptoJS.AES.encrypt(JSON.stringify(finalResult), secretKey.trim()).toString();
+        // La copio en la app de angular
         fs.writeFile('devstats/src/assets/raw-data.json', encrypted);
-        console.log(util.inspect(finalResult,true,1000,true));
     } catch (err) {
         console.error(err);
     }
