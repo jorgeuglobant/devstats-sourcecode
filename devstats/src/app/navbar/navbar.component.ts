@@ -32,10 +32,7 @@ export class NavbarComponent {
   constructor(private breakpointObserver: BreakpointObserver, public picker: DevPickerService) {
     this.picker.updateData$.subscribe(() => {
       this.sprintList = Object.keys(this.picker.rawData).sort();
-      this.devWhiteList = Object.keys(this.picker.currentSprint.devStats).filter(dev => dev !== 'Sprint Summary').sort();
     })
-    
-
   }
 
 }

@@ -84,28 +84,36 @@ export class SummaryLineChartComponent implements OnInit {
 
   constructor(private breakpointObserver: BreakpointObserver, public picker: DevPickerService) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.picker.updateData$.subscribe(() => {
-      this.lineChartLabels = Object.keys(this.picker.currentSprint.devStats).filter(x => x !== 'Sprint Summary').sort();
+      this.lineChartLabels = [...new Set(this.picker.currentSprint.timeTracks.map(it => it.dev))] as any;
       this.lineChartData = [
         // Time logged:
-        { data: this.lineChartLabels.map(dev => this.picker.currentSprint.devStats[`${dev}`]?
-            this.picker.currentSprint.devStats[`${dev}`].summary.totalTimeTrackedH
-            : 0), label: 'Time Tracked', hidden: false },
+        { data: this.lineChartLabels
+                  .map(dev => this.picker.currentSprint.timeTracks.filter(track => track.dev === dev)
+                  .reduce((time, track) => time + track.timeH,0)),
+          label: 'Time Tracked',
+          hidden: false },
         // Time in stories:
-        { data: this.lineChartLabels.map(dev => this.picker.currentSprint.devStats[`${dev}`]?
-        this.picker.currentSprint.devStats[`${dev}`].timeTracked.filter(tt => tt.type === 'Story' || tt.parentType === 'Story').reduce((acc, act) => acc + act.timeH, 0)
-        : 0), label: 'Time on stories', hidden: false },
+        { data: this.lineChartLabels
+                .map(dev => this.picker.currentSprint.timeTracks.filter(track => track.dev === dev && track.type === 'Story')
+                .reduce((time, track) => time + track.timeH,0)),
+          label: 'Time on Stories',
+          hidden: false },
         // Time in stories:
-        { data: this.lineChartLabels.map(dev => this.picker.currentSprint.devStats[`${dev}`]?
-         this.picker.currentSprint.devStats[`${dev}`].timeTracked.filter(tt => tt.type === 'Bug' || tt.parentType === 'Bug').reduce((acc, act) => acc + act.timeH, 0)
-         : 0), label: 'Time on bugs', hidden: false },
+        { data: this.lineChartLabels
+                .map(dev => this.picker.currentSprint.timeTracks.filter(track => track.dev === dev && track.type === 'Bug')
+                .reduce((time, track) => time + track.timeH,0)),
+          label: 'Time on Bugs',
+          hidden: false },
         // Time in stories:
-        { data: this.lineChartLabels.map(dev => this.picker.currentSprint.devStats[`${dev}`]?
-         this.picker.currentSprint.devStats[`${dev}`].timeTracked.filter(tt => tt.type !== 'Bug' && tt.parentType !== 'Bug' && tt.type !== 'Story' && tt.parentType !== 'Story').reduce((acc, act) => acc + act.timeH, 0)
-         : 0), label: 'Time on others', hidden: false }
+        { data: this.lineChartLabels
+                .map(dev => this.picker.currentSprint.timeTracks.filter(track => track.dev === dev && track.type !== 'Story' && track.type !== 'Bug')
+                .reduce((time, track) => time + track.timeH,0)),
+          label: 'Time on others',
+          hidden: false }
       ];
-    })
+    });
     this.picker.updateData$.next();
   }
   

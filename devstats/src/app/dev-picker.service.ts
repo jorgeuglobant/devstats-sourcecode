@@ -12,40 +12,26 @@ export class DevPickerService {
   public updateData$ = new Subject<void>()
   public currentSprint;
   public currentSprintName;
-  public currentDev;
-  public currentDevName;
   constructor(private httpService: HttpClient) {
 
   }
 
-  decryptData(password: string) {
+  decryptData(password: string): void {
     forkJoin([
       this.httpService.get('/assets/raw-data.json', { responseType: 'text' })
     ])
       .subscribe(rawData => {
         const data = CryptoJS.AES.decrypt(rawData[0], password.trim()).toString(CryptoJS.enc.Utf8);
         this.rawData = JSON.parse(data);
-        this.currentSprintName = Object.keys(this.rawData)[0];
-        this.currentSprint = this.rawData[this.currentSprintName];
-        this.pickDev('Sprint Summary');
+        this.pickSprint(Object.keys(this.rawData)[0]);
         this.decrypted = true;
+        console.log(this.currentSprint)
       });
   }
 
-  pickSprint(sprintName) {
+  pickSprint(sprintName): void {
     this.currentSprintName = sprintName;
     this.currentSprint = this.rawData[sprintName];
-    if (this.currentSprint.devStats[this.currentDevName]) {
-      this.pickDev(this.currentDevName);
-    } else {
-      this.pickDev('Sprint Summary');
-    }
-  }
-
-  pickDev(devName) {
-    this.currentDevName = devName;
-    this.currentDev = this.rawData[this.currentSprintName].devStats[devName];
     this.updateData$.next();
-    console.log(this.currentDev)
   }
 }

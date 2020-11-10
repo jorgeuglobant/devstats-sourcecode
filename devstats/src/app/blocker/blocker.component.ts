@@ -16,11 +16,11 @@ export class BlockerComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     this.passwordE.nativeElement.focus();
   }
 
-  accessData() {
+  accessData(): void {
     this.picker.decryptData(this.password);
   }
 

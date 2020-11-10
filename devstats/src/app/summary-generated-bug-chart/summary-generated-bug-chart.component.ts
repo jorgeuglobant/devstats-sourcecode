@@ -6,11 +6,11 @@ import { ChartDataSets, ChartOptions } from 'chart.js';
 import { Color, BaseChartDirective, Label } from 'ng2-charts';
 
 @Component({
-  selector: 'app-summary-bug-chart',
-  templateUrl: './summary-bug-chart.component.html',
-  styleUrls: ['./summary-bug-chart.component.scss']
+  selector: 'app-summary-generated-bug-chart',
+  templateUrl: './summary-generated-bug-chart.component.html',
+  styleUrls: ['./summary-generated-bug-chart.component.scss']
 })
-export class SummaryBugChartComponent implements OnInit {
+export class SummaryGeneratedBugChartComponent implements OnInit {
   public lineChartData: ChartDataSets[] = [];
   public lineChartLabels: Label[] = [];
   public lineChartOptions: (ChartOptions & { annotation: any }) = {
@@ -189,15 +189,15 @@ export class SummaryBugChartComponent implements OnInit {
       this.lineChartLabels = Object.keys(this.picker.rawData);
       this.lineChartData = [
         { data: this.lineChartLabels
-                  .map((sprint: string) => this.picker.rawData[sprint].bugsCreated.totalValid),
+                  .map((sprint: string) => this.picker.rawData[sprint].bugsGenerated.totalValid),
           label: 'Valid Bugs',
           hidden: false },
         { data: this.lineChartLabels
-                  .map((sprint: string) => this.picker.rawData[sprint].bugsCreated.totalInvalid),
+                  .map((sprint: string) => this.picker.rawData[sprint].bugsGenerated.totalInvalid),
           label: 'Invalid Bugs',
           hidden: false },
         { data: this.lineChartLabels
-                  .map((sprint: string) => this.picker.rawData[sprint].bugsCreated.totalOther),
+                  .map((sprint: string) => this.picker.rawData[sprint].bugsGenerated.totalOther),
           label: 'Uncategorized Bugs',
           hidden: false },
       ];

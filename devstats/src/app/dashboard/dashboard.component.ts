@@ -37,7 +37,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   constructor(private breakpointObserver: BreakpointObserver, public picker: DevPickerService) {}
 
   ngOnInit(): void{
-    this.picker.updateData$.subscribe(() => {
+    /*this.picker.updateData$.subscribe(() => {
       this.picker.currentDev.timeTrackedDS = new MatTableDataSource(this.picker.currentDev.timeTracked);
       this.picker.currentDev.timeTrackedDS.sort = this.sort;
       this.picker.currentDev.summary.totalStories = [
@@ -50,19 +50,19 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       [
       ...new Set (this.picker.currentDev.timeTracked.filter(tt => tt.type !== 'Bug' && tt.parentType !== 'Bug' && tt.type !== 'Story' && tt.parentType !== 'Story').map(a => a.id))
       ].length;
-    });
+    });*/
   }
  
   printParent(id){
-    //revisar JORGE
+    /*//revisar JORGE
     var a = this.picker.currentDev.timeTracked.filter(elem => elem.parent === id);
-    return a;
+    return a;*/
   }
 
   ngAfterViewInit(): void {
-    if (this.picker.currentDev) {
+    /*if (this.picker.currentDev) {
       this.picker.currentDev.timeTrackedDS = new MatTableDataSource(this.picker.currentDev.timeTracked);
       this.picker.currentDev.timeTrackedDS.sort = this.sort;
-    }
+    }*/
   }
 }

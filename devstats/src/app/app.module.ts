@@ -14,6 +14,7 @@ import { MatListModule } from '@angular/material/list';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { SummaryLineChartComponent } from './summary-line-chart/summary-line-chart.component';
 import { SummaryBugChartComponent } from './summary-bug-chart/summary-bug-chart.component';
+import { SummaryGeneratedBugChartComponent } from './summary-generated-bug-chart/summary-generated-bug-chart.component';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
@@ -33,6 +34,7 @@ import { MatSortModule } from '@angular/material/sort';
     DashboardComponent,
     SummaryLineChartComponent,
     SummaryBugChartComponent,
+    SummaryGeneratedBugChartComponent,
     BlockerComponent
   ],
   imports: [
