@@ -304,11 +304,14 @@ const buildBugsCreatedData = (sprint, issues) => {
 
 const buildBugsGeneratedData = (sprint, issues) => {
     const bugsGenerated = getBugsGeneratedOnSprint(sprint, issues);
+    const storiesDone = getStoriesDoneOnSprint(sprint, issues);
     return {
         total: bugsGenerated.length,
         totalValid: bugsGenerated.filter(bug => bug.reviewStatus === 'valid').length,
         totalInvalid: bugsGenerated.filter(bug => bug.reviewStatus === 'invalid').length,
         totalOther: bugsGenerated.filter(bug => bug.reviewStatus === 'other').length,
+        qaCompletition: (storiesDone.filter(issue => ['UAT Deploy','Ready for PROD', 'Closed', 'IN UAT'].includes(issue.fields.status.name)).length*100/storiesDone.length).toFixed(2),
+        uatCompletition: (storiesDone.filter(issue => ['Ready for PROD', 'Closed'].includes(issue.fields.status.name)).length*100/storiesDone.length).toFixed(2),
         bugs: bugsGenerated.map(bug => ({
             key: bug.key,
             summary: bug.fields.summary,
@@ -412,6 +415,11 @@ const buildSprintData = (sprint, issues) => ({
         const encrypted = CryptoJS.AES.encrypt(JSON.stringify(finalResult), secretKey.trim()).toString();
         // La copio en la app de angular
         fs.writeFile('devstats/src/assets/raw-data.json', encrypted);
+        Object.keys(finalResult).forEach(sprint => {
+            console.log(`${chalk.yellow(`For ${sprint}`)} there is a ${chalk.green(`QA completition`)} of ${chalk.green(`${finalResult[sprint].bugsGenerated.qaCompletition}%`)}`)
+            console.log(`${chalk.yellow(`For ${sprint}`)} there is a ${chalk.green(`UAT completition`)} of ${chalk.green(`${finalResult[sprint].bugsGenerated.uatCompletition}%`)}`)
+            console.log('-----------')
+        })
     } catch (err) {
         console.error(err);
     }
